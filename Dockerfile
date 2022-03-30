@@ -1,31 +1,35 @@
-# https://dev.to/rogertorres/first-steps-with-docker-rust-30oi
+FROM rust:latest AS builder
 
-FROM rust as build
+RUN rustup target add x86_64-unknown-linux-musl
+RUN apt update && apt install -y musl-tools musl-dev
+RUN update-ca-certificates
 
-# create a new empty shell project
-RUN USER=root cargo new --bin i-seek-you
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "10001" \
+    "server"
+
 WORKDIR /i-seek-you
 
-# copy over your manifests
-COPY ./Cargo.lock ./Cargo.lock
-COPY ./Cargo.toml ./Cargo.toml
+COPY ./ .
 
-# this build step will cache your dependencies
-# https://dev.to/tomasfejfar/comment/1kpi7
-RUN cargo build --release & rm src/*.rs
+RUN cargo build --target x86_64-unknown-linux-musl --release
 
-# copy your source tree
-COPY ./src ./src
 
-# build for release
-RUN rm ./target/release/deps/i_seek_you*
-RUN cargo build --release
+FROM scratch
 
-# our final base
-FROM debian:buster-slim
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
 
-# copy the build artifact from the build stage
-COPY --from=build /i-seek-you/target/release/i-seek-you .
+WORKDIR /i-seek-you
 
-# set the startup command to run your binary
+COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/i-seek-you ./
+
+USER server:server
+
+EXPOSE 8081
 CMD ["./i-seek-you"]
