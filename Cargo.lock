@@ -226,8 +226,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
 
 [[package]]
-name = "i-seek-you-server"
-version = "0.0.1"
+name = "i-seek-you"
+version = "0.0.2"
 dependencies = [
  "env_logger",
  "futures-channel",
