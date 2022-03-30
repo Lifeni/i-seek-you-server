@@ -18,7 +18,7 @@ RUN cargo build --release & rm src/*.rs
 COPY ./src ./src
 
 # build for release
-RUN rm ./target/release/deps/i-seek-you*
+RUN rm ./target/release/deps/i_seek_you*
 RUN cargo build --release
 
 # our final base
