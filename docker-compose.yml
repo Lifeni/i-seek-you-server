@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    image: lifeni/i-seek-you:latest
+    container_name: i-seek-you
+    restart: unless-stopped
+    ports:
+      - '8081:8081'

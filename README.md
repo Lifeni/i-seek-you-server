@@ -30,7 +30,7 @@ docker build -t i-seek-you:local .
 Or download from [Docker Hub](https://hub.docker.com/r/lifeni/i-seek-you).
 
 ```docker
-docker run --rm --name i-seek-you -p:8081:8081 i-seek-you:latest
+docker run -d --rm --name i-seek-you -p:8081:8081 lifeni/i-seek-you:latest
 ```
 
 ## License
