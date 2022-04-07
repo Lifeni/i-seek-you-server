@@ -1,4 +1,5 @@
 use crate::model::{PeerIds, PeerMap};
+use model::PeerId;
 use rand::{prelude::SliceRandom, thread_rng};
 use signaling::handle_signaling;
 use std::{
@@ -52,8 +53,8 @@ async fn main() {
 /// e.g. `["0000", "0001", ..., "9999"]`
 pub fn create_peer_ids() -> PeerIds {
     let mut ids = (0..9999)
-        .map(|x: i32| -> String { format!("{:0>4}", x.to_string()) })
-        .collect::<Vec<String>>();
+        .map(|x: i32| -> PeerId { format!("{:0>4}", x.to_string()) })
+        .collect::<Vec<PeerId>>();
     ids.shuffle(&mut thread_rng());
     PeerIds::new(RwLock::new(VecDeque::from(ids)))
 }

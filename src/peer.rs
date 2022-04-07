@@ -2,7 +2,7 @@ use crate::{
     model::{Peer, PeerId, PeerIp},
     PEER_IDS, PEER_MAP,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use tokio::sync::mpsc::UnboundedSender;
 use warp::ws::Message;
 
@@ -35,8 +35,6 @@ pub fn peer_join(
             },
         ),
     );
-
-    println!("Peer {} connected from {}", peer_id, peer_ip);
 }
 
 pub fn peer_leave(peer_id: &PeerId) {

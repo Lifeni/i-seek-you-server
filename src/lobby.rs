@@ -1,10 +1,10 @@
-use crate::model::{Response};
+use crate::model::{PeerIp, Response};
 use crate::PEER_MAP;
 use serde_json::json;
 use warp::ws::Message;
 
 /// Send lobby members of the same IP
-pub fn send_lobby(peer_ip: &String) {
+pub fn lobby_broadcast(peer_ip: &PeerIp) {
     let lobby = PEER_MAP.read().unwrap();
     let (mut senders, mut peers) = (Vec::new(), Vec::new());
     for (_, (ip, sender, peer)) in lobby.iter() {
