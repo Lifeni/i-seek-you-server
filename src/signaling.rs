@@ -1,7 +1,8 @@
 use crate::{
     lobby::lobby_broadcast,
     model::{PeerId, PeerIp},
-    peer::{get_peer_id, peer_join, peer_leave},
+    peer::{gen_peer_id, peer_call, peer_find, peer_leave, peer_sign},
+    PEER_MAP,
 };
 use futures_util::{SinkExt, StreamExt, TryFutureExt};
 use serde_json::{json, Value};
@@ -14,19 +15,21 @@ pub async fn handle_signaling(ws: WebSocket, peer_ip: PeerIp) {
     let (sender, receiver) = mpsc::unbounded_channel();
     let mut receiver = UnboundedReceiverStream::new(receiver);
 
+    let peer_id = gen_peer_id(sender.clone());
+    let cloned_id = peer_id.clone();
+    println!("Peer {} connected from {}", peer_id, peer_ip);
+
     tokio::task::spawn(async move {
         while let Some(message) = receiver.next().await {
             ws_sender
                 .send(message)
                 .unwrap_or_else(|e| {
                     eprintln!("Websocket send error: {}", e);
+                    peer_leave(&cloned_id)
                 })
                 .await;
         }
     });
-
-    let peer_id = get_peer_id(sender.clone());
-    println!("Peer {} connected from {}", peer_id, peer_ip);
 
     while let Some(result) = ws_receiver.next().await {
         let message = match result {
@@ -54,19 +57,32 @@ pub async fn handle_message(
     let message: Value = serde_json::from_str(message).expect("Error parsing message");
     match message["type"].as_str().unwrap() {
         // Receive peer info from the client
-        "hi" => {
-            peer_join(peer_id, peer_ip, sender, message);
+        "sign" => {
+            peer_sign(peer_id, peer_ip, sender, message);
             lobby_broadcast(peer_ip);
         }
+        "find" => peer_find(sender, message),
+        "call" => peer_call(peer_id, sender, message),
+        "disconnect" => relay(message),
+        "e2ee" | "answer" | "sdp" | "ice" | "error" => relay(message),
         "ping" => pong(sender),
         _ => unknown(),
-    }
+    };
 }
 
 fn pong(sender: UnboundedSender<Message>) {
     sender
         .send(Message::text(json!({ "type": "pong" }).to_string()))
         .expect("Failed to send pong")
+}
+
+fn relay(message: Value) {
+    let id = message["id"].as_str().unwrap().to_string();
+    let map = PEER_MAP.read().unwrap();
+    let (_, sender, _) = map.get(&id).unwrap();
+    sender
+        .send(Message::text(json!(message).to_string()))
+        .unwrap();
 }
 
 fn unknown() {

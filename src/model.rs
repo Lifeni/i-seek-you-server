@@ -27,5 +27,28 @@ pub struct Peer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Response {
-    Lobby { r#type: String, peers: Vec<Peer> },
+    Ok {
+        r#type: String,
+    },
+    Error {
+        r#type: String,
+        message: String,
+    },
+    Id {
+        r#type: String,
+        id: PeerId,
+    },
+    Lobby {
+        r#type: String,
+        peers: Vec<Peer>,
+    },
+    Peer {
+        r#type: String,
+        peer: Peer,
+    },
+    Call {
+        r#type: String,
+        peer: Peer,
+        password: String,
+    },
 }
