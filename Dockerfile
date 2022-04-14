@@ -27,9 +27,11 @@ COPY --from=builder /etc/group /etc/group
 
 WORKDIR /i-seek-you
 
-COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/i-seek-you ./
+COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/signaling ./
+COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/webrtc ./
+COPY --from=builder /i-seek-you/start.sh ./
 
 USER server:server
 
-EXPOSE 8081
-CMD ["./i-seek-you"]
+EXPOSE 8081  8082
+CMD ["./start.sh"]

@@ -1,7 +1,6 @@
 use crate::{
-    lobby::lobby_broadcast,
-    model::{PeerId, PeerIp},
-    peer::{gen_peer_id, peer_call, peer_find, peer_leave, peer_sign},
+    handler::{gen_peer_id, peer_boardcast, peer_call, peer_find, peer_leave, peer_sign},
+    types::{PeerId, PeerIp},
     PEER_MAP,
 };
 use futures_util::{SinkExt, StreamExt, TryFutureExt};
@@ -45,7 +44,7 @@ pub async fn handle_signaling(ws: WebSocket, peer_ip: PeerIp) {
     }
 
     peer_leave(&peer_id);
-    lobby_broadcast(&peer_ip);
+    peer_boardcast(&peer_ip);
 }
 
 pub async fn handle_message(
@@ -59,7 +58,7 @@ pub async fn handle_message(
         // Receive peer info from the client
         "sign" => {
             peer_sign(peer_id, peer_ip, sender, message);
-            lobby_broadcast(peer_ip);
+            peer_boardcast(peer_ip);
         }
         "find" => peer_find(sender, message),
         "call" => peer_call(peer_id, sender, message),
@@ -78,11 +77,17 @@ fn pong(sender: UnboundedSender<Message>) {
 
 fn relay(message: Value) {
     let id = message["id"].as_str().unwrap().to_string();
+    let r#type = message["type"].as_str().unwrap().to_string();
     let map = PEER_MAP.read().unwrap();
-    let (_, sender, _) = map.get(&id).unwrap();
-    sender
-        .send(Message::text(json!(message).to_string()))
-        .unwrap();
+    match map.get(&id) {
+        Some((_, sender, _)) => {
+            println!("Relay {} message to {}", r#type, id);
+            sender
+                .send(Message::text(json!(message).to_string()))
+                .unwrap();
+        }
+        None => (),
+    };
 }
 
 fn unknown() {

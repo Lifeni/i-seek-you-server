@@ -1,5 +1,5 @@
 use crate::{
-    model::{Peer, PeerId, PeerIp, Response},
+    types::{Peer, PeerId, PeerIp, Response},
     PEER_IDS, PEER_MAP,
 };
 use serde_json::{json, Value};
@@ -22,13 +22,17 @@ pub fn get_peer(
 ) -> Option<(UnboundedSender<Message>, Peer)> {
     let map = PEER_MAP.read().unwrap();
     let (_, sender, peer) = match map.get(peer_id) {
-        Some(peer) => peer.clone(),
+        Some(peer) => {
+            println!("Found peer {}", peer_id);
+            peer.clone()
+        }
         None => {
             let data = Response::Error {
                 r#type: "error".to_string(),
-                message: "No peer found".to_string(),
+                message: "No Peer Found".to_string(),
             };
             sender.send(Message::text(json!(data).to_string())).unwrap();
+            println!("Not found peer {}", peer_id);
             return None;
         }
     };
@@ -58,6 +62,7 @@ pub fn peer_call(self_id: &String, self_sender: UnboundedSender<Message>, messag
     let (_, _, info) = map.get(self_id).unwrap();
     match get_peer(&id, self_sender.clone()) {
         Some((sender, _)) => {
+            println!("Peer {} calls peer {}", self_id, id);
             sender
                 .send(Message::text(
                     json!(Response::Call {
@@ -97,4 +102,25 @@ pub fn peer_find(self_sender: UnboundedSender<Message>, message: Value) {
 pub fn peer_leave(peer_id: &PeerId) {
     PEER_IDS.write().unwrap().push_back(peer_id.to_string());
     PEER_MAP.write().unwrap().remove(peer_id);
+}
+
+/// Send lobby members of the same IP
+pub fn peer_boardcast(peer_ip: &PeerIp) {
+    let lobby = PEER_MAP.read().unwrap();
+    let (mut senders, mut peers) = (Vec::new(), Vec::new());
+    for (_, (ip, sender, peer)) in lobby.iter() {
+        if ip == peer_ip {
+            senders.push(sender.clone());
+            peers.push(peer.clone());
+        }
+    }
+
+    let response = Response::Lobby {
+        r#type: "lobby".to_string(),
+        peers,
+    };
+    let response = json!(&response).to_string();
+    for sender in senders {
+        sender.send(Message::text(&response)).unwrap();
+    }
 }

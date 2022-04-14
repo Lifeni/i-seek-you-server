@@ -1,7 +1,6 @@
-use crate::model::{PeerIds, PeerMap};
-use model::PeerId;
+use crate::signaling::handle_signaling;
+use crate::types::{PeerId, PeerIds, PeerMap};
 use rand::{prelude::SliceRandom, thread_rng};
-use signaling::handle_signaling;
 use std::{
     collections::VecDeque,
     env,
@@ -11,11 +10,9 @@ use std::{
 use warp::Filter;
 use warp_real_ip::get_forwarded_for;
 
-mod lobby;
-mod model;
-mod peer;
+mod handler;
 mod signaling;
-mod webrtc;
+mod types;
 
 #[macro_use]
 extern crate lazy_static;

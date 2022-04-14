@@ -6,4 +6,5 @@ services:
     container_name: i-seek-you
     restart: unless-stopped
     ports:
-      - '8081:8081'
+      - '8081:8081' # Signaling Server
+      - '8082:8082' # STUN Server
