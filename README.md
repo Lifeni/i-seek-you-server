@@ -8,8 +8,10 @@ A WebRTC server, see also [I Seek You](https://github.com/Lifeni/i-seek-you).
 ## Development
 
 ```sh
-cargo run # default listening 0.0.0.0:8081
-cargo run 127.0.0.1:8081
+# Run signaling server
+cargo run --bin signaling
+# Run webrtc server
+cargo run --bin webrtc
 ```
 
 ## Build
@@ -18,7 +20,8 @@ Tested on Rust `1.59.0`.
 
 ```sh
 cargo build --release
-# target/release/i-seek-you[.exe]
+# target/release/signaling[.exe]
+# target/release/webrtc[.exe]
 ```
 
 ### Dockerfile
@@ -27,10 +30,13 @@ cargo build --release
 docker build -t i-seek-you:local .
 ```
 
-Or download from [Docker Hub](https://hub.docker.com/r/lifeni/i-seek-you).
+You can also download it from [Docker Hub](https://hub.docker.com/r/lifeni/i-seek-you).
 
 ```docker
-docker run -d --rm --name i-seek-you -p:8081:8081 lifeni/i-seek-you:latest
+# Recommended
+docker-compose up -d
+# Or
+docker run -d --rm --name i-seek-you -p 8081:8081 -p 8082:8082 lifeni/i-seek-you:latest
 ```
 
 ## License
