@@ -16,14 +16,14 @@ pub async fn handle_signaling(ws: WebSocket, peer_ip: PeerIp) {
 
     let peer_id = gen_peer_id(sender.clone());
     let cloned_id = peer_id.clone();
-    println!("Peer {} connected from {}", peer_id, peer_ip);
+    println!("[signaling] peer {} connected from {}", peer_id, peer_ip);
 
     tokio::task::spawn(async move {
         while let Some(message) = receiver.next().await {
             ws_sender
                 .send(message)
                 .unwrap_or_else(|e| {
-                    eprintln!("Websocket send error: {}", e);
+                    println!("[signaling] websocket send error: {}", e);
                     peer_leave(&cloned_id)
                 })
                 .await;
@@ -34,7 +34,7 @@ pub async fn handle_signaling(ws: WebSocket, peer_ip: PeerIp) {
         let message = match result {
             Ok(message) => message,
             Err(e) => {
-                eprintln!("Websocket error: {}", e);
+                println!("[signaling] websocket error: {}", e);
                 break;
             }
         };
@@ -63,7 +63,7 @@ pub async fn handle_message(
         "find" => peer_find(sender, message),
         "call" => peer_call(peer_id, sender, message),
         "disconnect" => relay(message),
-        "e2ee" | "answer" | "sdp" | "ice" | "error" => relay(message),
+        "answer" | "error" | "sdp-offer" | "sdp-answer" | "ice-candidate" => relay(message),
         "ping" => pong(sender),
         _ => unknown(),
     };
@@ -81,7 +81,7 @@ fn relay(message: Value) {
     let map = PEER_MAP.read().unwrap();
     match map.get(&id) {
         Some((_, sender, _)) => {
-            println!("Relay {} message to {}", r#type, id);
+            println!("[signaling] relay {} message to {}", r#type, id);
             sender
                 .send(Message::text(json!(message).to_string()))
                 .unwrap();
@@ -91,5 +91,5 @@ fn relay(message: Value) {
 }
 
 fn unknown() {
-    println!("Unknown message type")
+    println!("[signaling] unknown message type")
 }

@@ -3,7 +3,6 @@ use crate::types::{PeerId, PeerIds, PeerMap};
 use rand::{prelude::SliceRandom, thread_rng};
 use std::{
     collections::VecDeque,
-    env,
     net::{IpAddr, SocketAddr},
     sync::RwLock,
 };
@@ -22,9 +21,18 @@ lazy_static! {
     static ref PEER_MAP: PeerMap = PeerMap::default();
 }
 
+struct Address {
+    host: IpAddr,
+    port: u16,
+}
+
 #[tokio::main]
 async fn main() {
-    let port = env::args().nth(1).unwrap_or_else(|| "8081".to_string());
+    let address = Address {
+        host: IpAddr::from([0, 0, 0, 0]),
+        port: 8081,
+    };
+    println!("[signaling] listening on {}:{}", address.host, address.port);
 
     let signaling = warp::path::end()
         .and(warp::ws())
@@ -42,7 +50,7 @@ async fn main() {
         );
 
     warp::serve(signaling)
-        .run(([0, 0, 0, 0], port.parse().expect("Invalid port")))
+        .run(SocketAddr::new(address.host, address.port))
         .await;
 }
 

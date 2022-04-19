@@ -10,8 +10,10 @@ A WebRTC server, see also [I Seek You](https://github.com/Lifeni/i-seek-you).
 ```sh
 # Run signaling server
 cargo run --bin signaling
-# Run webrtc server
-cargo run --bin webrtc
+# Run STUN server
+cargo run --bin stun
+# Run TURN server
+cargo run --bin turn
 ```
 
 ## Build
@@ -21,7 +23,8 @@ Tested on Rust `1.59.0`.
 ```sh
 cargo build --release
 # target/release/signaling[.exe]
-# target/release/webrtc[.exe]
+# target/release/stun[.exe]
+# target/release/turn[.exe]
 ```
 
 ### Dockerfile
@@ -36,7 +39,7 @@ You can also download it from [Docker Hub](https://hub.docker.com/r/lifeni/i-see
 # Recommended
 docker-compose up -d
 # Or
-docker run -d --rm --name i-seek-you -p 8081:8081 -p 8082:8082 lifeni/i-seek-you:latest
+docker run -d --rm --name i-seek-you -p 8081:8081 -p 8082:8082 -p 8083:8083 lifeni/i-seek-you:latest
 ```
 
 ## License

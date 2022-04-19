@@ -1,5 +1,5 @@
 [package]
-name = "webrtc"
+name = "stun"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,6 +8,5 @@ edition = "2021"
 [dependencies]
 fibers_global = "0.1.2"
 rustun = "0.4.0"
-rusturn = "0.0.4"
 stun_codec = "0.2.0"
 trackable = "1.2.0"

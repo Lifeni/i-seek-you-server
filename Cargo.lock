@@ -1011,6 +1011,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "309dee0d93c0a8f7a852cbd9a86e01e1a94781b64d98d86a191f4af7f095ecc1"
 
 [[package]]
+name = "stun"
+version = "0.1.0"
+dependencies = [
+ "fibers_global",
+ "rustun",
+ "stun_codec",
+ "trackable 1.2.0",
+]
+
+[[package]]
 name = "stun_codec"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1261,6 +1271,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "turn"
+version = "0.1.0"
+dependencies = [
+ "fibers_global",
+ "rusturn",
+ "stun_codec",
+ "trackable 1.2.0",
+ "uuid",
+]
+
+[[package]]
 name = "twoway"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1333,6 +1354,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09cc8ee72d2a9becf2f2febe0205bbed8fc6615b7cb429ad062dc7b7ddd036a9"
 
 [[package]]
+name = "uuid"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom",
+]
+
+[[package]]
 name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1399,17 +1429,6 @@ name = "wasi"
 version = "0.11.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
-
-[[package]]
-name = "webrtc"
-version = "0.1.0"
-dependencies = [
- "fibers_global",
- "rustun",
- "rusturn",
- "stun_codec",
- "trackable 1.2.0",
-]
 
 [[package]]
 name = "winapi"

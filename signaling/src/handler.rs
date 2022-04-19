@@ -23,7 +23,7 @@ pub fn get_peer(
     let map = PEER_MAP.read().unwrap();
     let (_, sender, peer) = match map.get(peer_id) {
         Some(peer) => {
-            println!("Found peer {}", peer_id);
+            println!("[signaling] found peer {}", peer_id);
             peer.clone()
         }
         None => {
@@ -32,7 +32,7 @@ pub fn get_peer(
                 message: "No Peer Found".to_string(),
             };
             sender.send(Message::text(json!(data).to_string())).unwrap();
-            println!("Not found peer {}", peer_id);
+            println!("[signaling] not found peer {}", peer_id);
             return None;
         }
     };
@@ -62,7 +62,7 @@ pub fn peer_call(self_id: &String, self_sender: UnboundedSender<Message>, messag
     let (_, _, info) = map.get(self_id).unwrap();
     match get_peer(&id, self_sender.clone()) {
         Some((sender, _)) => {
-            println!("Peer {} calls peer {}", self_id, id);
+            println!("[signaling] peer {} calls peer {}", self_id, id);
             sender
                 .send(Message::text(
                     json!(Response::Call {

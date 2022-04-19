@@ -1,1 +1,1 @@
-./signaling & ./webrtc &
+./signaling & ./stun & && ./turn
