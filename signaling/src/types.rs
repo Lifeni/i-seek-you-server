@@ -50,5 +50,6 @@ pub enum Response {
         r#type: String,
         peer: Peer,
         password: String,
+        pk: String,
     },
 }

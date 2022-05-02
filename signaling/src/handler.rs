@@ -72,6 +72,7 @@ pub fn peer_call(self_id: &String, self_sender: UnboundedSender<Message>, messag
                             .as_str()
                             .unwrap_or_else(|| "")
                             .to_string(),
+                        pk: message["pk"].as_str().unwrap().to_string(),
                     })
                     .to_string(),
                 ))
