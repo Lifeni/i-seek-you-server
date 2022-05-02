@@ -62,10 +62,8 @@ pub async fn handle_message(
         }
         "find" => peer_find(sender, message),
         "call" => peer_call(peer_id, sender, message),
-        "disconnect" => relay(message),
-        "answer" | "error" | "sdp-offer" | "sdp-answer" | "ice-candidate" | "media" => {
-            relay(message)
-        }
+        "connect" | "disconnect" | "answer" | "error" | "sdp-offer" | "sdp-answer"
+        | "ice-candidate" | "media" | "exchange-a" | "exchange-b" => relay(message),
         "ping" => pong(sender),
         _ => unknown(),
     };

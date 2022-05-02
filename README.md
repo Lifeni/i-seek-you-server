@@ -42,6 +42,14 @@ docker-compose up -d
 docker run -d --rm --name i-seek-you -p 8081:8081 -p 8082:8082 -p 8083:8083 lifeni/i-seek-you:latest
 ```
 
+## Scripts
+
+### Code Line Count
+
+```sh
+cloc --exclude-dir=target --include-ext=rs .
+```
+
 ## License
 
 MIT License
