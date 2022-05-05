@@ -1,11 +1,21 @@
 version: '3'
 
 services:
-  app:
+  signaling:
     image: lifeni/i-seek-you:latest
     container_name: i-seek-you
     restart: unless-stopped
     ports:
       - '8081:8081' # Signaling Server
-      - '8082:8082' # STUN Server
-      - '8083:8083' # TURN Server
+
+  stun:
+    image: lifeni/i-seek-you:latest
+    container_name: i-seek-you
+    restart: unless-stopped
+    # ports:
+    #   - '7201:7201/udp' # STUN Server
+    #   - '7202:7202/udp' # TURN Server
+    #   # For exchanging data, may have performance issues,
+    #   # so it is recommended to use host network mode.
+    #   - '49152-65535:49152-65536/udp'
+    network_mode: 'host'

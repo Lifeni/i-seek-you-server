@@ -13,7 +13,7 @@ struct Address {
 fn main() -> Result<(), MainError> {
     let address = Address {
         host: IpAddr::from([0, 0, 0, 0]),
-        port: 8082,
+        port: 7201,
     };
 
     println!("[stun] listening on {}:{}", address.host, address.port);
