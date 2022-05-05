@@ -36,5 +36,8 @@ RUN chmod 755 ./start.sh
 
 USER server:server
 
-EXPOSE 8081 7201/udp 7202/udp 49152-65535/udp
+EXPOSE 8081
+EXPOSE 7201-7202/udp
+EXPOSE 49152-65535/udp
+
 CMD ["sh", "./start.sh"]
