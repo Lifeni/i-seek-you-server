@@ -1,2 +1,2 @@
 [workspace]
-members = ["signaling", 'turn']
+members = ["signaling", 'stun', 'turn']

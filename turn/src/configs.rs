@@ -9,7 +9,7 @@ pub struct Configs<'a> {
 pub fn get_configs() -> Configs<'static> {
     Configs {
         public_ip: "81.68.166.119",
-        port: 3478,
+        port: 7202,
         realm: "i-seek-you.dist.run",
         username: "webrtc",
         password: "webrtc",

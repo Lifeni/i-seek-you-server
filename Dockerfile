@@ -28,6 +28,7 @@ COPY --from=builder /etc/group /etc/group
 WORKDIR /i-seek-you
 
 COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/signaling ./
+COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/stun ./
 COPY --from=builder /i-seek-you/target/x86_64-unknown-linux-musl/release/turn ./
 COPY --from=builder /i-seek-you/start.sh ./
 
