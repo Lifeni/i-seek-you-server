@@ -1,9 +1,8 @@
 # I Seek You Server
 
-![GitHub](https://img.shields.io/github/license/Lifeni/i-seek-you-server)
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/lifeni/i-seek-you)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/lifeni/i-seek-you?label=docker%20hub)](https://hub.docker.com/r/lifeni/i-seek-you)
 
-A WebRTC server, see also [I Seek You](https://github.com/Lifeni/i-seek-you).
+A WebRTC server, including signaling server and TURN server. See also [I Seek You](https://github.com/Lifeni/i-seek-you).
 
 ## Usage
 
@@ -69,4 +68,13 @@ docker run -d --rm --name i-seek-you --network host lifeni/i-seek-you:latest
 
 ## License
 
-MIT License
+This project is licensed under either of
+
+- Apache License, Version 2.0, (LICENSE-APACHE or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license (LICENSE-MIT or http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
