@@ -1,4 +1,2 @@
 #!/bin/sh
-./stun & 
-./turn &
-./signaling
+./turn & ./signaling

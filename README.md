@@ -5,49 +5,66 @@
 
 A WebRTC server, see also [I Seek You](https://github.com/Lifeni/i-seek-you).
 
+## Usage
+
+#### Signaling Server
+
+```js
+// The signaling server uses WebSocket to connect.
+// new WebSocket(`ws://localhost:8081`)
+new WebSocket(`wss://signaling.i-seek-you.dist.run`)
+```
+
+#### TURN Server
+
+```js
+// STUN and TURN use the same server.
+new RTCPeerConnection({
+  iceServers: [
+    // { urls: `stun:localhost:3478` },
+    { urls: `stun:stun.i-seek-you.dist.run` },
+    {
+      // urls: [`turn:localhost:3478`],
+      urls: [`turn:turn.i-seek-you.dist.run`],
+      username: 'webrtc',
+      credential: 'webrtc',
+    },
+  ],
+})
+```
+
 ## Development
+
+### Build
 
 ```sh
 # Run signaling server
 cargo run --bin signaling
-# Run STUN server
-cargo run --bin stun
 # Run TURN server
 cargo run --bin turn
-```
 
-## Build
-
-Tested on Rust `1.59.0`.
-
-```sh
+# Build
 cargo build --release
 # target/release/signaling[.exe]
-# target/release/stun[.exe]
 # target/release/turn[.exe]
 ```
 
-### Dockerfile
+#### Dockerfile
 
 ```sh
 docker build -t i-seek-you:local .
 ```
 
-You can also download it from [Docker Hub](https://hub.docker.com/r/lifeni/i-seek-you).
-
-```docker
-# Recommended
-docker-compose up -d
-# Or
-docker run -d --rm --name i-seek-you -p 8081:8081 -p 8082:8082 -p 8083:8083 lifeni/i-seek-you:latest
-```
-
-## Scripts
-
-### Code Line Count
+#### Docker Compose
 
 ```sh
-cloc --exclude-dir=target --include-ext=rs .
+# Recommended
+docker-compose up -d
+
+# Or
+docker run -d --rm --name i-seek-you --network host lifeni/i-seek-you:latest
+# Note: Declaring many ports may cause performance issues.
+# docker run -d --rm --name i-seek-you -p 8081:8081 -p 3478:3478/udp -p 49152-65535:49152-65535/udp lifeni/i-seek-you:latest
 ```
 
 ## License
